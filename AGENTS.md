@@ -10,6 +10,21 @@ This repository is a Vite + React + TypeScript frontend for the Frontend Mentor 
 - Build (TypeScript project build + Vite build): npm run build
 - Preview production build: npm run preview
 
+## Post-Task Hook
+
+**After completing every task or set of tasks, you MUST run the following commands in sequence from the `fe-savings-tracker/` directory. Do not report completion to the user until all commands pass.**
+
+```bash
+npm run lint      # auto-formats and fixes lint errors (--fix is built-in)
+npm run test      # runs all unit tests
+npm run build     # TypeScript type-check + Vite production build
+```
+
+- Run `npm run lint` first — it applies autoformatting in place before tests and build.
+- If `npm run test` fails, fix the failures before proceeding to `npm run build`.
+- If `npm run build` fails (TypeScript errors or Vite errors), fix them and re-run `npm run test` and `npm run build`.
+- Only report task completion after all three commands exit with code 0.
+
 ## Agent Workflow
 - Keep changes focused and minimal. Avoid broad refactors unless requested.
 - After edits, run npm run lint. Run npm run build for changes that affect app behavior, types, or build config.
