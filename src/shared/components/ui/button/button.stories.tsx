@@ -28,6 +28,11 @@ const meta = {
   },
   args: {
     children: 'Button',
+    variant: 'primary',
+    disabled: false,
+    leftIcon: undefined,
+    rightIcon: undefined,
+    className: '',
   },
   argTypes: {
     variant: {
@@ -53,6 +58,8 @@ const meta = {
 
 export default meta
 type Story = StoryObj<typeof meta>
+
+export const Playground: Story = {}
 
 export const AllVariants: Story = {
   render: () => (
