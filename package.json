@@ -16,7 +16,8 @@
     "api-docker": "docker run -v ./src/api:/out -it --rm docker.io/openapitools/openapi-generator-cli:v7.13.0 generate -i /out/swagger.json -g typescript-fetch --additional-properties=modelPropertyNaming=original -o /out/generated  --skip-validate-spec",
     "api-swagger": "curl -L -o ./src/api/swagger.json http://localhost:4000/api/docs/json",
     "api-clean": "rimraf ./src/api/generated",
-    "api-generate": "npm run api-swagger && npm run api-clean && npm run api-docker"
+    "api-nocheck": "find ./src/api/generated -name '*.ts' | xargs sed -i '' '1s/^/\\/\\/ @ts-nocheck\\n/'",
+    "api-generate": "npm run api-swagger && npm run api-clean && npm run api-docker && npm run api-nocheck"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
