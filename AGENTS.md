@@ -49,5 +49,66 @@ npm run build     # TypeScript type-check + Vite production build
 - React Compiler is enabled through Babel in [vite.config.ts](vite.config.ts). Preserve this setup unless the user asks to change compiler behavior.
 - TypeScript project build is part of npm run build, so type issues will fail builds even if dev server starts.
 
+## Folder Structure
+
+This project follows the **Feature-Based / Modular Structure**. Code is grouped by feature/domain. Pages are thin — they only compose pieces from `features/` and `shared/`.
+
+```
+src/
+├── app/                          # App-wide setup
+│   ├── App.tsx
+│   ├── router.tsx                # Route definitions
+│   └── providers/                # Theme, Auth, Query providers
+│       └── AppProviders.tsx
+│
+├── pages/                        # Route-level components (thin, composition only)
+│   ├── LoginPage.tsx
+│   ├── SignupPage.tsx
+│   ├── DashboardPage.tsx
+│   └── SavingsGoalDetailsPage.tsx
+│
+├── features/                     # Self-contained feature modules
+│   ├── auth/
+│   │   ├── components/           # LoginForm, SignupForm
+│   │   ├── hooks/                # useLogin, useSignup
+│   │   ├── api/                  # authApi.ts
+│   │   ├── types.ts
+│   │   └── index.ts              # Public barrel export
+│   │
+│   ├── dashboard/
+│   │   ├── components/           # SavingsGoalList, SavingsGoalCard, TotalSavedWidget
+│   │   ├── hooks/                # useSavingsGoals
+│   │   ├── api/                  # dashboardApi.ts
+│   │   └── index.ts
+│   │
+│   └── savings-goal/
+│       ├── components/           # SavingsGoalHeader, DepositList, DepositForm, ProgressBar
+│       ├── hooks/                # useSavingsGoal, useAddDeposit
+│       ├── api/                  # savingsGoalApi.ts
+│       ├── types.ts
+│       └── index.ts
+│
+├── shared/                       # Reusable across features
+│   ├── components/
+│   │   ├── ui/                   # shadcn/ui primitives
+│   │   └── layout/               # AppShell, ProtectedRoute
+│   ├── hooks/
+│   ├── lib/
+│   │   ├── apiClient.ts          # axios/fetch wrapper
+│   │   └── utils.ts
+│   └── types/
+│       └── common.ts
+│
+├── assets/
+├── index.css
+└── main.tsx
+```
+
+### Conventions
+- **Barrel exports** — each `features/<name>/index.ts` exports only its public API.
+- **No cross-feature imports** — features must not import from each other; lift shared code to `shared/`.
+- **`pages/` stays thin** — only layout composition, no business logic.
+- Use the `@/` path alias (configured in `vite.config.ts` and `tsconfig.app.json`) for all imports.
+
 ## Reference
 - Base project template notes: [README.md](README.md)
