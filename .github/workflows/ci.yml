@@ -11,10 +11,6 @@ jobs:
     name: Install, Lint, Test & Build
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: fe-savings-tracker
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,7 +20,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: fe-savings-tracker/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
