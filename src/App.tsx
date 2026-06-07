@@ -25,7 +25,7 @@ function App() {
         <Button
 
           type="button"
-          variant="outline"
+          variant="primary"
           onClick={() => setCount((count) => count + 1)}
         >
           Count is {count}
