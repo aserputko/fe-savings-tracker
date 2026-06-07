@@ -11,3 +11,15 @@ export function setToken(token: string): void {
 export function removeToken(): void {
   localStorage.removeItem(TOKEN_KEY);
 }
+
+export function isTokenValid(): boolean {
+  const token = getToken();
+  if (!token) return false;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return typeof payload.exp === 'number' && payload.exp * 1000 > Date.now();
+  } catch {
+    return false;
+  }
+}
