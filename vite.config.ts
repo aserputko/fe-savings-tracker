@@ -6,9 +6,9 @@ import path from 'path';
 import { defineConfig } from 'vite';
 
 // https://vite.dev/config/
-import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
+import { fileURLToPath } from 'node:url';
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
@@ -22,6 +22,12 @@ export default defineConfig({
     }
   },
   test: {
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.stories.{ts,tsx}', 'src/test/**', 'src/main.tsx', 'src/assets/**'],
+      reporter: ['text', 'html'],
+    },
     projects: [{
       extends: true,
       plugins: [
@@ -40,6 +46,14 @@ export default defineConfig({
             browser: 'chromium'
           }]
         }
+      }
+    }, {
+      extends: true,
+      test: {
+        name: 'unit',
+        environment: 'jsdom',
+        setupFiles: ['./src/test/setup.ts'],
+        include: ['src/**/*.test.{ts,tsx}'],
       }
     }]
   }
