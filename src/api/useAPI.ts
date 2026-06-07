@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
+import { getToken } from '../features/auth/lib/token';
 import * as api from './generated';
 
 export type FetchAPI = WindowOrWorkerGlobalScope['fetch'];
@@ -8,7 +9,7 @@ export function useFetchApi() {
   return useCallback<FetchAPI>(
     async (url, init) => {
       const headers: HeadersInit = {};
-      const token = 'TBD Token';
+      const token = getToken();
 
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
