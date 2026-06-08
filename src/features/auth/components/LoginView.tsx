@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
+import { Logo } from '@/shared/components/ui/logo/logo';
 import { useLogin } from '../hooks/useLogin';
 import { setToken } from '../lib/token';
 import { AuthQuote } from './AuthQuote';
@@ -39,13 +40,17 @@ export function LoginView() {
       {/* Form panel */}
       <div className="flex flex-1 items-center justify-center p-8 bg-neutral-900">
         <div className="w-full max-w-100">
-          <h1 className="text-2xl font-semibold text-neutral-0 tracking-[-0.5px] mb-8">
+          <Logo className='mb-10' />
+          <h1 className="text-preset-2 text-neutral-0 mb-2">
             Welcome back
           </h1>
+          <p className="text-preset-5 text-neutral-300">Sign in to your account</p>
+
+          <hr className="my-8 border-neutral-700" />
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
             <Input
-              label="Email"
+              label="Email address"
               type="email"
               placeholder=""
               required
@@ -84,7 +89,7 @@ export function LoginView() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-neutral-300">
+          <p className="text-preset-5 text-neutral-300 text-center mt-5">
             Don&apos;t have an account?{' '}
             <Link to="/signup" className="text-neutral-0 underline underline-offset-2 hover:text-orange-400">
               Create one

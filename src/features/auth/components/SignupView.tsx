@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
+import { Logo } from '@/shared/components/ui/logo/logo';
 import { useSignup } from '../hooks/useSignup';
 import { setToken } from '../lib/token';
 import { AuthQuote } from './AuthQuote';
@@ -40,6 +41,7 @@ export function SignupView() {
       {/* Form panel */}
       <div className="flex flex-1 items-center justify-center p-8 bg-neutral-900">
         <div className="w-full max-w-100">
+          <Logo className='mb-10' />
           <h1 className="text-2xl font-semibold text-neutral-0 tracking-[-0.5px] mb-8">
             Create an account
           </h1>
