@@ -5,6 +5,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { useSignup } from '../hooks/useSignup';
 import { setToken } from '../lib/token';
+import { AuthQuote } from './AuthQuote';
 
 interface SignupFormValues {
   fullName: string;
@@ -32,9 +33,9 @@ export function SignupView() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row">
+    <div className="flex min-h-screen flex-col lg:flex-row bg-neutral-900">
       {/* Orange decorative panel — desktop only */}
-      <div className="hidden lg:block lg:w-1/2 bg-orange-400" />
+      <AuthQuote />
 
       {/* Form panel */}
       <div className="flex flex-1 items-center justify-center p-8 bg-neutral-900">
