@@ -25,11 +25,13 @@ const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
 export function AuthQuote() {
   return (
     <div className="hidden lg:flex lg:w-1/2 relative bg-orange-400 rounded-3xl m-10 flex-col items-start justify-center p-12 overflow-hidden">
-      <blockquote className="relative z-10 flex flex-col gap-4">
-        <p className="text-2xl font-bold leading-snug text-neutral-0 tracking-[-0.5px]">
-          &ldquo;{randomQuote.text}&rdquo;
-        </p>
-        <footer className="text-sm font-medium text-neutral-0/80">
+      <blockquote className="relative h-full flex-auto flex flex-col gap-4">
+        <div className="flex flex-col h-full items-center justify-center">
+          <p className="text-preset-1 text-neutral-0">
+            &ldquo;{randomQuote.text}&rdquo;
+          </p>
+        </div>
+        <footer className="text-preset-4 text-neutral-0 ">
           &mdash; {randomQuote.author}
         </footer>
       </blockquote>
