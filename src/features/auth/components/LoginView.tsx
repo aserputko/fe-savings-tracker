@@ -33,13 +33,13 @@ export function LoginView() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row bg-neutral-900">
+    <div className="flex min-h-screen flex-col lg:flex-row bg-neutral-900 lg:pl-10 lg:pr-20 lg:py-10 lg:gap-20">
       {/* Orange decorative panel — desktop only */}
       <AuthQuote />
 
       {/* Form panel */}
-      <div className="flex flex-1 items-center justify-center p-8 bg-neutral-900">
-        <div className="w-full max-w-100">
+      <div className="flex flex-1 items-center justify-center p-8 lg:flex-none lg:w-[640px] lg:p-0 bg-neutral-900">
+        <div className="w-full mb-10">
           <Logo className='mb-10' />
           <h1 className="text-preset-2 text-neutral-0 mb-2">
             Welcome back
@@ -84,8 +84,8 @@ export function LoginView() {
               </p>
             )}
 
-            <Button type="submit" variant="primary" className="w-full mt-1" disabled={isPending}>
-              {isPending ? 'Signing in…' : 'Sign In'}
+            <Button type="submit" variant="primary" className="w-full mt-3" disabled={isPending}>
+              {isPending ? 'Signing in…' : 'Sign in'}
             </Button>
           </form>
 

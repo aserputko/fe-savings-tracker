@@ -24,14 +24,17 @@ const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
 export function AuthQuote() {
   return (
-    <div className="hidden lg:flex lg:w-1/2 relative bg-orange-400 rounded-3xl m-10 flex-col items-start justify-center p-12 overflow-hidden">
+    <div
+      className="hidden lg:flex lg:flex-1 relative rounded-2xl flex-col items-start justify-center p-12 overflow-hidden border border-white/30"
+      style={{ background: 'linear-gradient(-89.7deg, #FF5722 0.35%, #B92B09 99.65%)' }}
+    >
       <blockquote className="relative h-full flex-auto flex flex-col gap-4">
         <div className="flex flex-col h-full items-center justify-center">
           <p className="text-preset-1 text-neutral-0">
             &ldquo;{randomQuote.text}&rdquo;
           </p>
         </div>
-        <footer className="text-preset-4 text-neutral-0 ">
+        <footer className="text-preset-4 text-neutral-0 opacity-80">
           &mdash; {randomQuote.author}
         </footer>
       </blockquote>
@@ -40,7 +43,7 @@ export function AuthQuote() {
         src={patternStar}
         alt=""
         aria-hidden="true"
-        className="absolute bottom-0 right-0 w-116 h-116 pointer-events-none"
+        className="absolute -bottom-[122px] -right-[99px] w-116 h-116 pointer-events-none"
       />
     </div>
   );
