@@ -34,13 +34,13 @@ export function SignupView() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row bg-neutral-900">
+    <div className="flex min-h-screen flex-col lg:flex-row bg-neutral-900 lg:pl-10 lg:pr-20 lg:py-10 lg:gap-20">
       {/* Orange decorative panel — desktop only */}
       <AuthQuote />
 
       {/* Form panel */}
-      <div className="flex flex-1 items-center justify-center p-8 bg-neutral-900">
-        <div className="w-full max-w-100">
+      <div className="flex flex-1 items-center justify-center p-8 lg:flex-none lg:w-[640px] lg:p-0 bg-neutral-900">
+        <div className="w-full mb-10">
           <Logo className='mb-10' />
           <h1 className="text-2xl font-semibold text-neutral-0 tracking-[-0.5px] mb-8">
             Create an account

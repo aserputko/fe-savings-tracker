@@ -85,7 +85,7 @@ export function LoginView() {
             )}
 
             <Button type="submit" variant="primary" className="w-full mt-3" disabled={isPending}>
-              {isPending ? 'Signing in…' : 'Sign in'}
+              {isPending ? 'Signing in…' : 'Sign In'}
             </Button>
           </form>
 
