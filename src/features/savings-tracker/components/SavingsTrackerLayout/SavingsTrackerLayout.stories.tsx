@@ -1,18 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Layout } from '.';
+import { SavingsTrackerLayout } from '.';
 
 const meta = {
-  title: 'Design System/Layout',
-  component: Layout,
+  title: 'Components/SavingsTrackerLayout',
+  component: SavingsTrackerLayout,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
   },
-  argTypes: {
-    onNewGoal: { action: 'onNewGoal' },
-  },
-} satisfies Meta<typeof Layout>;
+  argTypes: {},
+} satisfies Meta<typeof SavingsTrackerLayout>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

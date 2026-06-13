@@ -5,7 +5,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Dialog } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
 
-import { useCreateSavingsGoal } from '../hooks/useCreateSavingsGoal';
+import { useCreateSavingsGoal } from '../../hooks/useCreateSavingsGoal';
 
 interface CreateSavingsGoalDialogProps {
   open: boolean;

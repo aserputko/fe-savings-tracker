@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Navbar } from '.';
+import { SavingsTrackerNavbar } from '.';
 
 const meta = {
-  title: 'Design System/Navbar',
-  component: Navbar,
+  title: 'Components/SavingsTrackerNavbar',
+  component: SavingsTrackerNavbar,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
@@ -12,7 +12,7 @@ const meta = {
   argTypes: {
     onNewGoal: { action: 'onNewGoal' },
   },
-} satisfies Meta<typeof Navbar>;
+} satisfies Meta<typeof SavingsTrackerNavbar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

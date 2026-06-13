@@ -2,11 +2,11 @@ import logoSmall from '@/assets/images/logo-small.svg';
 
 import { Button } from '@/shared/components/ui/button';
 
-export interface NavbarProps {
+export interface SavingsTrackerNavbarProps {
   onNewGoal?: () => void;
 }
 
-export function Navbar({ onNewGoal }: NavbarProps) {
+export function SavingsTrackerNavbar({ onNewGoal }: SavingsTrackerNavbarProps) {
   return (
     <header className='flex items-center justify-between border-b border-neutral-800 px-4 py-3 md:h-20 md:px-6 md:py-0'>
       <div className='flex items-center gap-2.5'>
