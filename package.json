@@ -12,15 +12,23 @@
     "test": "vitest run --project unit",
     "test:coverage": "vitest run --project unit --coverage",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "api-docker": "docker run -v ./src/api:/out -it --rm docker.io/openapitools/openapi-generator-cli:v7.13.0 generate -i /out/swagger.json -g typescript-fetch --additional-properties=modelPropertyNaming=original -o /out/generated  --skip-validate-spec",
+    "api-swagger": "curl -L -o ./src/api/swagger.json http://localhost:4000/api/docs/json",
+    "api-clean": "rimraf ./src/api/generated",
+    "api-nocheck": "find ./src/api/generated -name '*.ts' | xargs sed -i '' '1s/^/\\/\\/ @ts-nocheck\\n/'",
+    "api-generate": "npm run api-swagger && npm run api-clean && npm run api-docker && npm run api-nocheck"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
+    "@tanstack/react-query": "^5.101.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.17.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "react-hook-form": "^7.77.0",
+    "react-router-dom": "^7.17.0",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
@@ -52,6 +60,7 @@
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
     "playwright": "^1.60.0",
+    "rimraf": "^6.1.3",
     "storybook": "^10.4.1",
     "tailwindcss": "^4.3.0",
     "typescript": "~6.0.2",

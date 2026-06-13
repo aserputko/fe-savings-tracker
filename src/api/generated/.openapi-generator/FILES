@@ -1,0 +1,16 @@
+.openapi-generator-ignore
+apis/AuthApi.ts
+apis/SavingsGoalsApi.ts
+apis/index.ts
+index.ts
+models/AddDepositDto.ts
+models/AuthResponseDto.ts
+models/CreateSavingsGoalDto.ts
+models/LoginDto.ts
+models/PaginationDto.ts
+models/SavingsGoalDepositResponseDto.ts
+models/SavingsGoalResponseDto.ts
+models/SavingsGoalsListResponseDto.ts
+models/SignupDto.ts
+models/index.ts
+runtime.ts

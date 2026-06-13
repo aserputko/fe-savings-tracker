@@ -46,7 +46,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label !== undefined && (
           <label className="text-base font-medium text-neutral-0 leading-normal tracking-[-0.3px]">
             {label}
-            {required && <span className="text-neutral-300 ml-1">*</span>}
+            {required && <span>*</span>}
           </label>
         )}
         <div className={cn(inputWrapperVariants({ variant, className }))}>
