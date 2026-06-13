@@ -8,7 +8,7 @@ export interface SavingsTrackerGoalCardProps {
   goalName: string;
   targetAmount: number;
   currentAmount: number;
-  deadline: Date | number;
+  deadline?: Date | number | null;
   size?: GoalCardSize;
   state?: GoalCardState;
   className?: string;
@@ -122,7 +122,7 @@ export function SavingsTrackerGoalCard({
               !isWide && 'opacity-70',
             )}
           >
-            Due {formatDeadline(deadline)}
+            {deadline != null ? `Due ${formatDeadline(deadline)}` : 'No deadline'}
           </span>
         </div>
       </div>
