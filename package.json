@@ -20,6 +20,7 @@
     "api-generate": "npm run api-swagger && npm run api-clean && npm run api-docker && npm run api-nocheck"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.16",
     "@radix-ui/react-slot": "^1.2.4",
     "@tanstack/react-query": "^5.101.0",
     "class-variance-authority": "^0.7.1",
