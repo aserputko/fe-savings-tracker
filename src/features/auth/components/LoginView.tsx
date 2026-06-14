@@ -33,26 +33,24 @@ export function LoginView() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row bg-neutral-900 lg:pl-10 lg:pr-20 lg:py-10 lg:gap-20">
+    <div className='flex min-h-screen flex-col lg:flex-row bg-neutral-900 lg:pl-10 lg:pr-20 lg:py-10 lg:gap-20 mx-auto max-w-[1440px]'>
       {/* Orange decorative panel — desktop only */}
       <AuthQuote />
 
       {/* Form panel */}
-      <div className="flex flex-1 items-center justify-center p-8 lg:flex-none lg:w-[640px] lg:p-0 bg-neutral-900">
-        <div className="w-full mb-10">
+      <div className='flex flex-1 items-center justify-center p-8 lg:flex-none lg:w-[640px] lg:p-0 bg-neutral-900'>
+        <div className='w-full mb-10'>
           <Logo className='mb-10' />
-          <h1 className="text-preset-2 text-neutral-0 mb-2">
-            Welcome back
-          </h1>
-          <p className="text-preset-5 text-neutral-300">Sign in to your account</p>
+          <h1 className='text-preset-2 text-neutral-0 mb-2'>Welcome back</h1>
+          <p className='text-preset-5 text-neutral-300'>Sign in to your account</p>
 
-          <hr className="my-8 border-neutral-700" />
+          <hr className='my-8 border-neutral-700' />
 
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className='flex flex-col gap-5'>
             <Input
-              label="Email address"
-              type="email"
-              placeholder=""
+              label='Email address'
+              type='email'
+              placeholder=''
               required
               variant={errors.email ? 'error' : 'default'}
               errorText={errors.email?.message}
@@ -66,9 +64,9 @@ export function LoginView() {
             />
 
             <Input
-              label="Password"
-              type="password"
-              placeholder=""
+              label='Password'
+              type='password'
+              placeholder=''
               required
               variant={errors.password ? 'error' : 'default'}
               errorText={errors.password?.message}
@@ -79,19 +77,22 @@ export function LoginView() {
             />
 
             {error && (
-              <p className="text-sm font-medium text-red-500">
+              <p className='text-sm font-medium text-red-500'>
                 Something went wrong. Please try again.
               </p>
             )}
 
-            <Button type="submit" variant="primary" className="w-full mt-3" disabled={isPending}>
+            <Button type='submit' variant='primary' className='w-full mt-3' disabled={isPending}>
               {isPending ? 'Signing in…' : 'Sign In'}
             </Button>
           </form>
 
-          <p className="text-preset-5 text-neutral-300 text-center mt-5">
+          <p className='text-preset-5 text-neutral-300 text-center mt-5'>
             Don&apos;t have an account?{' '}
-            <Link to="/signup" className="text-neutral-0 underline underline-offset-2 hover:text-orange-400">
+            <Link
+              to='/signup'
+              className='text-neutral-0 underline underline-offset-2 hover:text-orange-400'
+            >
               Create one
             </Link>
           </p>
