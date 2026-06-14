@@ -1,5 +1,5 @@
-import { DashboardView } from '@/features/dashboard/components/DashboardView'
+import { SavingsTrackerDashboard } from '@/features/savings-tracker/components/SavingsTrackerDashboard';
 
 export function DashboardPage() {
-  return <DashboardView />
+  return <SavingsTrackerDashboard />;
 }
