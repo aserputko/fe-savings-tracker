@@ -12,8 +12,10 @@ export function SavingsTrackerLayout({ children }: SavingsTrackerLayoutProps) {
   return (
     <>
       <div className='min-h-screen w-full bg-neutral-900'>
-        <SavingsTrackerNavbar onNewGoal={() => setIsDialogOpen(true)} />
-        <main className='px-6 py-12'>{children}</main>
+        <div className='mx-auto max-w-[1440px]'>
+          <SavingsTrackerNavbar onNewGoal={() => setIsDialogOpen(true)} />
+          <main className='px-6 py-12'>{children}</main>
+        </div>
       </div>
 
       <CreateSavingsGoalDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />

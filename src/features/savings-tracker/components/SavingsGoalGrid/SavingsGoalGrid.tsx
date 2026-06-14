@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import type { SavingsGoalResponseDto } from '../../../../api/generated';
 import type { GoalCardState } from '../SavingsTrackerGoaldCard';
 import { SavingsTrackerGoalCard } from '../SavingsTrackerGoaldCard';
@@ -29,6 +30,7 @@ function GoalCardGroup({
   cards: SavingsGoalResponseDto[];
   groupIndex: number;
 }) {
+  const navigate = useNavigate();
   const [first, second, third, fourth] = cards;
   const isPatternA = groupIndex % 2 === 0;
 
@@ -42,6 +44,7 @@ function GoalCardGroup({
       size='wide'
       state={deriveState(first.currentAmount, first.targetAmount)}
       className='w-full'
+      onClick={() => navigate(`/goals/${first.id}`)}
     />
   );
 
@@ -57,6 +60,7 @@ function GoalCardGroup({
           size='default'
           state={deriveState(second.currentAmount, second.targetAmount)}
           className='flex-1'
+          onClick={() => navigate(`/goals/${second.id}`)}
         />
       )}
       {third && (
@@ -69,6 +73,7 @@ function GoalCardGroup({
           size='default'
           state={deriveState(third.currentAmount, third.targetAmount)}
           className='flex-1'
+          onClick={() => navigate(`/goals/${third.id}`)}
         />
       )}
     </div>
@@ -84,6 +89,7 @@ function GoalCardGroup({
       size='tall'
       state={deriveState(fourth.currentAmount, fourth.targetAmount)}
       className='w-full h-full'
+      onClick={() => navigate(`/goals/${fourth.id}`)}
     />
   );
 
@@ -114,6 +120,7 @@ function GoalCardGroup({
 }
 
 export function SavingsGoalGrid({ goals }: SavingsGoalGridProps) {
+  const navigate = useNavigate();
   const groups: SavingsGoalResponseDto[][] = [];
   for (let i = 0; i < goals.length; i += 4) {
     groups.push(goals.slice(i, i + 4));
@@ -141,6 +148,7 @@ export function SavingsGoalGrid({ goals }: SavingsGoalGridProps) {
               deadline={toDeadline(goal.deadline)}
               size='default'
               state={deriveState(goal.currentAmount, goal.targetAmount)}
+              onClick={() => navigate(`/goals/${goal.id}`)}
             />
           ))}
         </div>
