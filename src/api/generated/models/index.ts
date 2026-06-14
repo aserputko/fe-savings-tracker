@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* tslint:disable */
- 
+/* eslint-disable */
 export * from './AddDepositDto';
 export * from './AuthResponseDto';
 export * from './CreateSavingsGoalDto';

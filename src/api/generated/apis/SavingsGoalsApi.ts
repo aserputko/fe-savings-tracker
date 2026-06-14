@@ -49,6 +49,10 @@ export interface SavingsGoalControllerFindAllRequest {
     pageSize?: number;
 }
 
+export interface SavingsGoalControllerFindOneRequest {
+    id: string;
+}
+
 /**
  * 
  */
@@ -188,6 +192,47 @@ export class SavingsGoalsApi extends runtime.BaseAPI {
      */
     async savingsGoalControllerFindAll(requestParameters: SavingsGoalControllerFindAllRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SavingsGoalsListResponseDto> {
         const response = await this.savingsGoalControllerFindAllRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get a savings goal by ID
+     */
+    async savingsGoalControllerFindOneRaw(requestParameters: SavingsGoalControllerFindOneRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SavingsGoalResponseDto>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling savingsGoalControllerFindOne().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/savings-goals/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SavingsGoalResponseDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Get a savings goal by ID
+     */
+    async savingsGoalControllerFindOne(requestParameters: SavingsGoalControllerFindOneRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SavingsGoalResponseDto> {
+        const response = await this.savingsGoalControllerFindOneRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
