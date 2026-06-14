@@ -38,7 +38,7 @@ export function LoginView() {
       <AuthQuote />
 
       {/* Form panel */}
-      <div className='flex flex-1 items-center justify-center p-8 lg:flex-none lg:w-[640px] lg:p-0 bg-neutral-900'>
+      <div className='flex flex-1 items-center justify-center p-8 lg:p-0 bg-neutral-900'>
         <div className='w-full mb-10'>
           <Logo className='mb-10' />
           <h1 className='text-preset-2 text-neutral-0 mb-2'>Welcome back</h1>
