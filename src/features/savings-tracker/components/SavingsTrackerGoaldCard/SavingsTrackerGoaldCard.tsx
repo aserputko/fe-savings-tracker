@@ -12,6 +12,7 @@ export interface SavingsTrackerGoalCardProps {
   size?: GoalCardSize;
   state?: GoalCardState;
   className?: string;
+  onClick?: () => void;
 }
 
 const cardVariants = cva('relative overflow-hidden flex flex-col gap-6 p-6 rounded-2xl border', {
@@ -51,6 +52,7 @@ export function SavingsTrackerGoalCard({
   size = 'default',
   state = 'inProgress',
   className,
+  onClick,
 }: SavingsTrackerGoalCardProps) {
   const isWide = size === 'wide';
   const isComplete = state === 'complete';
@@ -77,6 +79,7 @@ export function SavingsTrackerGoalCard({
       className={cn(
         cardVariants({ size }),
         isWide ? 'border-white/30' : 'bg-neutral-800 border-neutral-600',
+        onClick && 'cursor-pointer',
         className,
       )}
       style={
@@ -84,6 +87,19 @@ export function SavingsTrackerGoalCard({
           ? {
               backgroundImage:
                 'linear-gradient(-83.84786220334723deg, #ff5722 1.4973%, #b92b09 98.503%)',
+            }
+          : undefined
+      }
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClick();
+              }
             }
           : undefined
       }
