@@ -38,7 +38,7 @@ export function LoginView() {
       <AuthQuote />
 
       {/* Form panel */}
-      <div className='flex flex-1 items-center justify-center p-8 lg:p-0 bg-neutral-900'>
+      <div className='flex flex-1 items-center justify-center p-4 md:p-16 lg:p-0 bg-neutral-900'>
         <div className='w-full'>
           <Logo className='mb-10' />
           <h1 className='text-preset-2 text-neutral-0 mb-2'>Welcome back</h1>
@@ -76,14 +76,14 @@ export function LoginView() {
               })}
             />
 
-            <p className='text-preset-5 text-neutral-300 text-right -mt-2'>
+            {/* <p className='text-preset-5 text-neutral-300 text-right -mt-2'>
               <Link
                 to='/forgot-password'
                 className='text-neutral-300 underline underline-offset-2 hover:text-orange-400'
               >
                 Forgot password?
               </Link>
-            </p>
+            </p> */}
 
             {error && (
               <p className='text-sm font-medium text-red-500'>

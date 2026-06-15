@@ -39,16 +39,15 @@ export function SignupView() {
       <AuthQuote />
 
       {/* Form panel */}
-      <div className='flex flex-1 items-center justify-center p-8 lg:flex-none lg:w-[640px] lg:p-0 bg-neutral-900'>
-        <div className='w-full mb-10'>
+      <div className='flex flex-1 items-center justify-center p-4 md:p-16 lg:p-0 bg-neutral-900'>
+        <div className='w-full'>
           <Logo className='mb-10' />
-          <h1 className='text-2xl font-semibold text-neutral-0 tracking-[-0.5px] mb-8'>
-            Create an account
-          </h1>
+          <h1 className='text-preset-2 text-neutral-0 mb-1'>Create your account</h1>
+          <p className='text-preset-5 text-neutral-300 mb-8'>Start tracking your savings goals</p>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className='flex flex-col gap-5'>
             <Input
-              label='Full Name'
+              label='Full name'
               placeholder=''
               required
               variant={errors.fullName ? 'error' : 'default'}
@@ -57,7 +56,7 @@ export function SignupView() {
             />
 
             <Input
-              label='Email'
+              label='Email address'
               type='email'
               placeholder=''
               required
