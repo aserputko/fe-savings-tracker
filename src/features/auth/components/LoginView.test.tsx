@@ -27,7 +27,9 @@ function renderLoginView() {
     </MemoryRouter>,
   );
   const emailInput = result.container.querySelector('input[name="email"]') as HTMLInputElement;
-  const passwordInput = result.container.querySelector('input[name="password"]') as HTMLInputElement;
+  const passwordInput = result.container.querySelector(
+    'input[name="password"]',
+  ) as HTMLInputElement;
   return { ...result, emailInput, passwordInput };
 }
 
@@ -61,7 +63,7 @@ describe('LoginView', () => {
     expect(screen.getByRole('heading', { name: 'Welcome back' })).toBeInTheDocument();
     expect(emailInput).toBeInTheDocument();
     expect(passwordInput).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Create one' })).toBeInTheDocument();
   });
 
@@ -84,11 +86,11 @@ describe('LoginView', () => {
   });
 
   // TC-6 — Both fields empty on submission
-  it('GIVEN both fields are empty WHEN user clicks Sign In THEN email and password errors are shown and mutate is NOT called', async () => {
+  it('GIVEN both fields are empty WHEN user clicks Sign in THEN email and password errors are shown and mutate is NOT called', async () => {
     const { mutate } = setupUseLogin();
     renderLoginView();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(await screen.findByText('Email is required')).toBeInTheDocument();
     expect(await screen.findByText('Password is required')).toBeInTheDocument();
@@ -96,13 +98,13 @@ describe('LoginView', () => {
   });
 
   // TC-7 — Invalid email format
-  it('GIVEN email is "notanemail" and password is valid WHEN user clicks Sign In THEN only email format error is shown', async () => {
+  it('GIVEN email is "notanemail" and password is valid WHEN user clicks Sign in THEN only email format error is shown', async () => {
     const { mutate } = setupUseLogin();
     const { emailInput, passwordInput } = renderLoginView();
 
     await userEvent.type(emailInput, 'notanemail');
     await userEvent.type(passwordInput, 'validpassword');
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(await screen.findByText('Enter a valid email address')).toBeInTheDocument();
     expect(screen.queryByText('Password is required')).not.toBeInTheDocument();
@@ -111,38 +113,38 @@ describe('LoginView', () => {
   });
 
   // TC-9 — Password exactly 7 characters (boundary — invalid)
-  it('GIVEN password has exactly 7 characters WHEN user clicks Sign In THEN password min-length error is shown', async () => {
+  it('GIVEN password has exactly 7 characters WHEN user clicks Sign in THEN password min-length error is shown', async () => {
     const { mutate } = setupUseLogin();
     const { emailInput, passwordInput } = renderLoginView();
 
     await userEvent.type(emailInput, 'user@example.com');
     await userEvent.type(passwordInput, 'abc1234');
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(await screen.findByText('Password must be at least 8 characters')).toBeInTheDocument();
     expect(mutate).not.toHaveBeenCalled();
   });
 
   // TC-10 — Password exactly 8 characters (boundary — valid)
-  it('GIVEN password has exactly 8 characters WHEN user clicks Sign In THEN no password error and mutate is called', async () => {
+  it('GIVEN password has exactly 8 characters WHEN user clicks Sign in THEN no password error and mutate is called', async () => {
     const { mutate } = setupUseLogin();
     const { emailInput, passwordInput } = renderLoginView();
 
     await userEvent.type(emailInput, 'user@example.com');
     await userEvent.type(passwordInput, 'abcd1234');
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(screen.queryByText('Password must be at least 8 characters')).not.toBeInTheDocument();
     expect(mutate).toHaveBeenCalledOnce();
   });
 
   // TC-15 — Email blank, password valid
-  it('GIVEN email is empty and password is valid WHEN user clicks Sign In THEN only email error is shown', async () => {
+  it('GIVEN email is empty and password is valid WHEN user clicks Sign in THEN only email error is shown', async () => {
     const { mutate } = setupUseLogin();
     const { passwordInput } = renderLoginView();
 
     await userEvent.type(passwordInput, 'validpassword');
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(await screen.findByText('Email is required')).toBeInTheDocument();
     expect(screen.queryByText('Password is required')).not.toBeInTheDocument();
@@ -150,12 +152,12 @@ describe('LoginView', () => {
   });
 
   // TC-16 — Password blank, email valid
-  it('GIVEN email is valid and password is empty WHEN user clicks Sign In THEN only password error is shown', async () => {
+  it('GIVEN email is valid and password is empty WHEN user clicks Sign in THEN only password error is shown', async () => {
     const { mutate } = setupUseLogin();
     const { emailInput } = renderLoginView();
 
     await userEvent.type(emailInput, 'user@example.com');
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(await screen.findByText('Password is required')).toBeInTheDocument();
     expect(screen.queryByText('Email is required')).not.toBeInTheDocument();
@@ -163,13 +165,13 @@ describe('LoginView', () => {
   });
 
   // TC-17 — Email with spaces treated as invalid
-  it('GIVEN email contains a space WHEN user clicks Sign In THEN email format error is shown', async () => {
+  it('GIVEN email contains a space WHEN user clicks Sign in THEN email format error is shown', async () => {
     const { mutate } = setupUseLogin();
     const { emailInput, passwordInput } = renderLoginView();
 
     await userEvent.type(emailInput, 'user @example.com');
     await userEvent.type(passwordInput, 'validpassword');
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(await screen.findByText('Enter a valid email address')).toBeInTheDocument();
     expect(mutate).not.toHaveBeenCalled();
@@ -193,7 +195,7 @@ describe('LoginView', () => {
 
     await userEvent.type(emailInput, 'user@example.com');
     await userEvent.type(passwordInput, 'password123');
-    await userEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(setToken).toHaveBeenCalledWith('test-token');
     expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
@@ -206,7 +208,7 @@ describe('LoginView', () => {
     renderLoginView();
 
     expect(screen.getByText('Something went wrong. Please try again.')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Sign In' })).not.toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Sign in' })).not.toBeDisabled();
   });
 
   // TC-19 — Native browser validation is suppressed

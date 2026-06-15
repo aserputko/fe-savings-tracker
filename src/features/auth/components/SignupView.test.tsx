@@ -26,9 +26,13 @@ function renderSignupView() {
       <SignupView />
     </MemoryRouter>,
   );
-  const fullNameInput = result.container.querySelector('input[name="fullName"]') as HTMLInputElement;
+  const fullNameInput = result.container.querySelector(
+    'input[name="fullName"]',
+  ) as HTMLInputElement;
   const emailInput = result.container.querySelector('input[name="email"]') as HTMLInputElement;
-  const passwordInput = result.container.querySelector('input[name="password"]') as HTMLInputElement;
+  const passwordInput = result.container.querySelector(
+    'input[name="password"]',
+  ) as HTMLInputElement;
   return { ...result, fullNameInput, emailInput, passwordInput };
 }
 
@@ -64,15 +68,15 @@ describe('SignupView', () => {
     expect(emailInput).toBeInTheDocument();
     expect(passwordInput).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Create account' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Sign In' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Sign in' })).toBeInTheDocument();
   });
 
-  // TC-3 — "Sign In" link navigates to /login
-  it('GIVEN the sign up page WHEN rendered THEN "Sign In" link points to /login', () => {
+  // TC-3 — "Sign in" link navigates to /login
+  it('GIVEN the sign up page WHEN rendered THEN "Sign in" link points to /login', () => {
     setupUseSignup();
     renderSignupView();
 
-    expect(screen.getByRole('link', { name: 'Sign In' })).toHaveAttribute('href', '/login');
+    expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', '/login');
   });
 
   // TC-4 — Submit button loading state during registration

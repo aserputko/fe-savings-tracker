@@ -102,7 +102,7 @@ export function SignupView() {
               to='/login'
               className='text-neutral-0 underline underline-offset-2 hover:text-orange-400'
             >
-              Sign In
+              Sign in
             </Link>
           </p>
         </div>
