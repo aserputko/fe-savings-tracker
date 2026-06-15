@@ -1,4 +1,10 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@layer base {
+  body {
+    @apply bg-neutral-900;
+  }
+}
 
 /* ─── Font faces ─────────────────────────────────────────────────────────── */
 
@@ -85,9 +91,9 @@
 }
 
 @utility text-preset-3 {
-  font-family: var(--font-inter);
-  font-size: 1.25rem; /* 20px */
-  font-weight: 700;
+  font-family: var(--font-bricolage-grotesque);
+  font-size: 1.5rem; /* 24px */
+  font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.3px;
 }
