@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useSavingsGoalById } from '../../hooks';
 import { SavingsTrackerLayout } from '../SavingsTrackerLayout';
+import { AddDepositForm } from './AddDepositForm';
 import { SavingsGoalProgressCard } from './SavingsGoalProgressCard';
 
 function formatDeadline(deadline: object): string {
@@ -62,8 +63,19 @@ export function SavingsGoalDetails() {
           )}
         </div>
 
-        {/* Progress card */}
-        {goal && <SavingsGoalProgressCard goal={goal} />}
+        {/* Content grid: left column (progress + deposit form) | right column (history) */}
+        {goal && (
+          <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 items-start'>
+            {/* Left column */}
+            <div className='flex flex-col gap-6'>
+              <SavingsGoalProgressCard goal={goal} />
+              {goal.currentAmount < goal.targetAmount && <AddDepositForm goal={goal} />}
+            </div>
+
+            {/* Right column — Deposit history (KAN-48) */}
+            <div />
+          </div>
+        )}
       </div>
     </SavingsTrackerLayout>
   );
