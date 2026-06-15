@@ -92,7 +92,7 @@ export function CreateSavingsGoalDialog({ open, onOpenChange }: CreateSavingsGoa
             })}
           />
           <Input
-            label='Deadline (optional)'
+            label='Deadline'
             type='date'
             leftIcon='calendar'
             errorText={errors.deadline?.message}
