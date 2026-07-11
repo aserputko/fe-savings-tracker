@@ -19,6 +19,12 @@ resource "aws_cloudfront_origin_access_control" "storybook" {
   signing_protocol                  = "sigv4"
 }
 
+# Access logging is intentionally disabled: the origin is a public, anonymous,
+# static Storybook site (no auth, no PII, no forms). CloudFront metrics still
+# provide request/error/cache visibility, and enabling S3 standard logs would
+# only add a log bucket + lifecycle + cost with no security benefit here.
+# checkov:skip=CKV_AWS_86: Public static Storybook — access logs not required.
+# tfsec:ignore:aws-cloudfront-enable-logging Public static Storybook — access logs not required.
 resource "aws_cloudfront_distribution" "storybook" {
   enabled             = true
   comment             = "Storybook for ${var.github_repository}"
