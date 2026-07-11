@@ -73,12 +73,17 @@ export function CreateSavingsGoalDialog({ open, onOpenChange }: CreateSavingsGoa
       <form id='create-savings-goal-form' onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className='flex flex-col gap-5'>
           <Input
+            required
             label='Goal name'
             placeholder='e.g. MacBook Pro M4'
             errorText={errors.name?.message}
-            {...register('name', { required: 'Goal name is required' })}
+            {...register('name', {
+              required: 'Goal name is required',
+              maxLength: { value: 256, message: 'Goal name must be at most 256 characters' },
+            })}
           />
           <Input
+            required
             label='Target amount'
             type='number'
             min={0.01}

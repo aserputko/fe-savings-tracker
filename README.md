@@ -7,6 +7,15 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
+## Storybook deployment
+
+Storybook is automatically built and deployed to AWS (S3 + CloudFront) at
+<https://saving-tracker-storybook.aserputko.com> on every push to `main`
+via the `Deploy Storybook` GitHub Actions workflow.
+
+Infrastructure is managed with Terraform in [devops/terraform](devops/terraform).
+See the full setup/operations guide in [devops/README.md](devops/README.md).
+
 ## React Compiler
 
 The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
@@ -42,15 +51,15 @@ export default defineConfig([
       // other options...
     },
   },
-])
+]);
 ```
 
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import reactX from 'eslint-plugin-react-x';
+import reactDom from 'eslint-plugin-react-dom';
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -71,5 +80,5 @@ export default defineConfig([
       // other options...
     },
   },
-])
+]);
 ```
