@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
@@ -23,6 +23,7 @@ export function AddDepositForm({ goal }: AddDepositFormProps) {
   const {
     register,
     handleSubmit,
+    control,
     reset,
     setError,
     formState: { errors },
@@ -58,17 +59,10 @@ export function AddDepositForm({ goal }: AddDepositFormProps) {
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className='flex flex-col gap-6'>
         <div className='flex flex-col gap-5'>
-          <Input
-            label='Amount'
-            type='number'
-            min={0.01}
-            step='any'
-            placeholder='0.00'
-            leftIcon='dollar'
-            required
-            variant={errors.amount ? 'error' : 'default'}
-            errorText={errors.amount?.message}
-            {...register('amount', {
+          <Controller
+            name='amount'
+            control={control}
+            rules={{
               required: 'Amount is required',
               min: { value: 0.01, message: 'Amount must be a positive number' },
               validate: {
@@ -82,7 +76,25 @@ export function AddDepositForm({ goal }: AddDepositFormProps) {
                   );
                 },
               },
-            })}
+            }}
+            render={({ field }) => (
+              <Input
+                label='Amount'
+                type='number'
+                min={0.01}
+                step='any'
+                placeholder='0.00'
+                leftIcon='dollar'
+                required
+                variant={errors.amount ? 'error' : 'default'}
+                errorText={errors.amount?.message}
+                name={field.name}
+                ref={field.ref}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+              />
+            )}
           />
           <Input
             label='Note'
