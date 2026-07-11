@@ -1,4 +1,5 @@
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/shared/components/ui/button';
@@ -6,24 +7,28 @@ import { Input } from '@/shared/components/ui/input';
 import { Logo } from '@/shared/components/ui/logo/logo';
 import { useLogin } from '../hooks/useLogin';
 import { setToken } from '../lib/token';
+import { AuthErrorBanner } from './AuthErrorBanner';
 import { AuthQuote } from './AuthQuote';
-
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
+import {
+  LoginSchema,
+  loginDefaults,
+  type LoginFormOutput,
+  type LoginFormValues,
+} from './login.schema';
 
 export function LoginView() {
   const navigate = useNavigate();
   const { mutate: login, isPending, error } = useLogin();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormValues>();
+  const methods = useForm<LoginFormValues, unknown, LoginFormOutput>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: loginDefaults,
+    mode: 'onSubmit',
+  });
 
-  const onSubmit = (data: LoginFormValues) => {
+  const { control, handleSubmit } = methods;
+
+  const onSubmit = (data: LoginFormOutput) => {
     login(data, {
       onSuccess: (response) => {
         setToken(response.access_token);
@@ -46,55 +51,56 @@ export function LoginView() {
 
           <hr className='my-8 border-neutral-700' />
 
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className='flex flex-col gap-5'>
-            <Input
-              label='Email address'
-              type='email'
-              placeholder=''
-              required
-              variant={errors.email ? 'error' : 'default'}
-              errorText={errors.email?.message}
-              {...register('email', {
-                required: 'Email is required',
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Enter a valid email address',
-                },
-              })}
-            />
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate className='flex flex-col gap-5'>
+              <Controller
+                name='email'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    label='Email address'
+                    type='email'
+                    placeholder=''
+                    required
+                    variant={fieldState.invalid ? 'error' : 'default'}
+                    errorText={fieldState.error?.message}
+                  />
+                )}
+              />
 
-            <Input
-              label='Password'
-              type='password'
-              placeholder=''
-              required
-              variant={errors.password ? 'error' : 'default'}
-              errorText={errors.password?.message}
-              {...register('password', {
-                required: 'Password is required',
-                minLength: { value: 8, message: 'Password must be at least 8 characters' },
-              })}
-            />
+              <Controller
+                name='password'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    label='Password'
+                    type='password'
+                    placeholder=''
+                    required
+                    variant={fieldState.invalid ? 'error' : 'default'}
+                    errorText={fieldState.error?.message}
+                  />
+                )}
+              />
 
-            {/* <p className='text-preset-5 text-neutral-300 text-right -mt-2'>
-              <Link
-                to='/forgot-password'
-                className='text-neutral-300 underline underline-offset-2 hover:text-orange-400'
-              >
-                Forgot password?
-              </Link>
-            </p> */}
+              {/* <p className='text-preset-5 text-neutral-300 text-right -mt-2'>
+                <Link
+                  to='/forgot-password'
+                  className='text-neutral-300 underline underline-offset-2 hover:text-orange-400'
+                >
+                  Forgot password?
+                </Link>
+              </p> */}
 
-            {error && (
-              <p className='text-sm font-medium text-red-500'>
-                Something went wrong. Please try again.
-              </p>
-            )}
+              <AuthErrorBanner error={error} />
 
-            <Button type='submit' variant='primary' className='w-full mt-3' disabled={isPending}>
-              {isPending ? 'Signing in…' : 'Sign in'}
-            </Button>
-          </form>
+              <Button type='submit' variant='primary' className='w-full mt-3' disabled={isPending}>
+                {isPending ? 'Signing in…' : 'Sign in'}
+              </Button>
+            </form>
+          </FormProvider>
 
           <p className='text-preset-5 text-neutral-300 text-center mt-5'>
             Don&apos;t have an account?{' '}

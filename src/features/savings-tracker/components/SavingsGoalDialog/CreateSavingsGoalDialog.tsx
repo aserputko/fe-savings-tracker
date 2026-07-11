@@ -1,45 +1,66 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import { Button } from '@/shared/components/ui/button';
 import { Dialog } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
 
 import { useCreateSavingsGoal } from '../../hooks';
+import {
+  CreateSavingsGoalSchema,
+  createSavingsGoalDefaults,
+  type CreateSavingsGoalFormOutput,
+  type CreateSavingsGoalFormValues,
+} from './createSavingsGoal.schema';
 
 interface CreateSavingsGoalDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-interface FormValues {
-  name: string;
-  targetAmount: string;
-  deadline: string;
+const FORM_ID = 'create-savings-goal-form';
+
+interface SubmitButtonProps {
+  isPending: boolean;
+}
+
+function CreateSavingsGoalSubmitButton({ isPending }: SubmitButtonProps) {
+  const {
+    formState: { isSubmitting },
+  } = useFormContext<CreateSavingsGoalFormValues>();
+  const disabled = isPending || isSubmitting;
+
+  return (
+    <Button variant='primary' type='submit' form={FORM_ID} disabled={disabled}>
+      {disabled ? 'Creating…' : 'Create goal'}
+    </Button>
+  );
 }
 
 export function CreateSavingsGoalDialog({ open, onOpenChange }: CreateSavingsGoalDialogProps) {
   const { mutate, isPending } = useCreateSavingsGoal();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormValues>();
+  const methods = useForm<CreateSavingsGoalFormValues, unknown, CreateSavingsGoalFormOutput>({
+    resolver: zodResolver(CreateSavingsGoalSchema),
+    defaultValues: createSavingsGoalDefaults,
+    mode: 'onSubmit',
+  });
+
+  const { control, handleSubmit, reset } = methods;
 
   useEffect(() => {
     if (!open) {
-      reset();
+      reset(createSavingsGoalDefaults);
     }
   }, [open, reset]);
 
-  function onSubmit(values: FormValues) {
+  function onSubmit(values: CreateSavingsGoalFormOutput) {
     mutate(
       {
         name: values.name,
-        targetAmount: Number(values.targetAmount),
-        deadline: values.deadline || undefined,
+        targetAmount: values.targetAmount,
+        deadline: values.deadline,
       },
       {
         onSuccess: () => {
@@ -50,61 +71,71 @@ export function CreateSavingsGoalDialog({ open, onOpenChange }: CreateSavingsGoa
   }
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onOpenChange}
-      title='New goal'
-      footer={
-        <>
-          <Button variant='secondary' type='button' onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button
-            variant='primary'
-            type='submit'
-            form='create-savings-goal-form'
-            disabled={isPending}
-          >
-            {isPending ? 'Creating…' : 'Create goal'}
-          </Button>
-        </>
-      }
-    >
-      <form id='create-savings-goal-form' onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div className='flex flex-col gap-5'>
-          <Input
-            required
-            label='Goal name'
-            placeholder='e.g. MacBook Pro M4'
-            errorText={errors.name?.message}
-            {...register('name', {
-              required: 'Goal name is required',
-              maxLength: { value: 256, message: 'Goal name must be at most 256 characters' },
-            })}
-          />
-          <Input
-            required
-            label='Target amount'
-            type='number'
-            min={0.01}
-            step='any'
-            leftIcon='dollar'
-            placeholder='0.00'
-            errorText={errors.targetAmount?.message}
-            {...register('targetAmount', {
-              required: 'Target amount is required',
-              min: { value: 0.01, message: 'Amount must be greater than 0' },
-            })}
-          />
-          <Input
-            label='Deadline'
-            type='date'
-            leftIcon='calendar'
-            errorText={errors.deadline?.message}
-            {...register('deadline')}
-          />
-        </div>
-      </form>
-    </Dialog>
+    <FormProvider {...methods}>
+      <Dialog
+        open={open}
+        onOpenChange={onOpenChange}
+        title='New goal'
+        footer={
+          <>
+            <Button variant='secondary' type='button' onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <CreateSavingsGoalSubmitButton isPending={isPending} />
+          </>
+        }
+      >
+        <form id={FORM_ID} onSubmit={handleSubmit(onSubmit)} noValidate>
+          <div className='flex flex-col gap-5'>
+            <Controller
+              name='name'
+              control={control}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  required
+                  label='Goal name'
+                  placeholder='e.g. MacBook Pro M4'
+                  variant={fieldState.invalid ? 'error' : 'default'}
+                  errorText={fieldState.error?.message}
+                />
+              )}
+            />
+            <Controller
+              name='targetAmount'
+              control={control}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  required
+                  label='Target amount'
+                  type='number'
+                  min={0.01}
+                  step='any'
+                  leftIcon='dollar'
+                  placeholder='0.00'
+                  variant={fieldState.invalid ? 'error' : 'default'}
+                  errorText={fieldState.error?.message}
+                />
+              )}
+            />
+            <Controller
+              name='deadline'
+              control={control}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  label='Deadline'
+                  type='date'
+                  leftIcon='calendar'
+                  variant={fieldState.invalid ? 'error' : 'default'}
+                  errorText={fieldState.error?.message}
+                />
+              )}
+            />
+          </div>
+        </form>
+      </Dialog>
+    </FormProvider>
   );
 }
