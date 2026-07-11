@@ -1,4 +1,5 @@
-import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/shared/components/ui/button';
@@ -6,25 +7,28 @@ import { Input } from '@/shared/components/ui/input';
 import { Logo } from '@/shared/components/ui/logo/logo';
 import { useSignup } from '../hooks/useSignup';
 import { setToken } from '../lib/token';
+import { AuthErrorBanner } from './AuthErrorBanner';
 import { AuthQuote } from './AuthQuote';
-
-interface SignupFormValues {
-  fullName: string;
-  email: string;
-  password: string;
-}
+import {
+  SignupSchema,
+  signupDefaults,
+  type SignupFormOutput,
+  type SignupFormValues,
+} from './signup.schema';
 
 export function SignupView() {
   const navigate = useNavigate();
   const { mutate: signup, isPending, error } = useSignup();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignupFormValues>();
+  const methods = useForm<SignupFormValues, unknown, SignupFormOutput>({
+    resolver: zodResolver(SignupSchema),
+    defaultValues: signupDefaults,
+    mode: 'onSubmit',
+  });
 
-  const onSubmit = (data: SignupFormValues) => {
+  const { control, handleSubmit } = methods;
+
+  const onSubmit = (data: SignupFormOutput) => {
     signup(data, {
       onSuccess: (response) => {
         setToken(response.access_token);
@@ -45,55 +49,62 @@ export function SignupView() {
           <h1 className='text-preset-2 text-neutral-0 mb-1'>Create your account</h1>
           <p className='text-preset-5 text-neutral-300 mb-8'>Start tracking your savings goals</p>
 
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className='flex flex-col gap-5'>
-            <Input
-              label='Full name'
-              placeholder=''
-              required
-              variant={errors.fullName ? 'error' : 'default'}
-              errorText={errors.fullName?.message}
-              {...register('fullName', { required: 'Full name is required' })}
-            />
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate className='flex flex-col gap-5'>
+              <Controller
+                name='fullName'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    label='Full name'
+                    placeholder=''
+                    required
+                    variant={fieldState.invalid ? 'error' : 'default'}
+                    errorText={fieldState.error?.message}
+                  />
+                )}
+              />
 
-            <Input
-              label='Email address'
-              type='email'
-              placeholder=''
-              required
-              variant={errors.email ? 'error' : 'default'}
-              errorText={errors.email?.message}
-              {...register('email', {
-                required: 'Email is required',
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Enter a valid email address',
-                },
-              })}
-            />
+              <Controller
+                name='email'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    label='Email address'
+                    type='email'
+                    placeholder=''
+                    required
+                    variant={fieldState.invalid ? 'error' : 'default'}
+                    errorText={fieldState.error?.message}
+                  />
+                )}
+              />
 
-            <Input
-              label='Password'
-              type='password'
-              placeholder=''
-              required
-              variant={errors.password ? 'error' : 'default'}
-              errorText={errors.password?.message}
-              {...register('password', {
-                required: 'Password is required',
-                minLength: { value: 8, message: 'Password must be at least 8 characters' },
-              })}
-            />
+              <Controller
+                name='password'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    label='Password'
+                    type='password'
+                    placeholder=''
+                    required
+                    variant={fieldState.invalid ? 'error' : 'default'}
+                    errorText={fieldState.error?.message}
+                  />
+                )}
+              />
 
-            {error && (
-              <p className='text-sm font-medium text-red-500'>
-                Something went wrong. Please try again.
-              </p>
-            )}
+              <AuthErrorBanner error={error} />
 
-            <Button type='submit' variant='primary' className='w-full mt-1' disabled={isPending}>
-              {isPending ? 'Creating account…' : 'Create account'}
-            </Button>
-          </form>
+              <Button type='submit' variant='primary' className='w-full mt-1' disabled={isPending}>
+                {isPending ? 'Creating account…' : 'Create account'}
+              </Button>
+            </form>
+          </FormProvider>
 
           <p className='mt-6 text-center text-sm text-neutral-300'>
             Already have an account?{' '}

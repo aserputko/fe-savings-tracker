@@ -1,0 +1,9 @@
+# Copy to terraform.tfvars to override defaults (all values below are the defaults).
+
+project_name           = "savings-tracker-storybook"
+aws_region             = "us-east-1"
+domain_name            = "saving-tracker-storybook.aserputko.com"
+root_domain            = "aserputko.com"
+acm_certificate_domain = "*.aserputko.com"
+github_repository      = "aserputko/fe-savings-tracker"
+github_branch          = "main"

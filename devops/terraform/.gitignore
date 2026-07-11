@@ -1,0 +1,16 @@
+# Local state (this project intentionally uses local state — do not commit it)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Variable files may contain account-specific values
+*.tfvars
+!*.tfvars.example
+
+# Provider plugins and modules
+.terraform/
+
+# Crash logs and plan files
+crash.log
+crash.*.log
+*.tfplan

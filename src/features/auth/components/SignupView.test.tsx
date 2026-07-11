@@ -63,7 +63,7 @@ describe('SignupView', () => {
     setupUseSignup();
     const { fullNameInput, emailInput, passwordInput } = renderSignupView();
 
-    expect(screen.getByRole('heading', { name: 'Create an account' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Create your account' })).toBeInTheDocument();
     expect(fullNameInput).toBeInTheDocument();
     expect(emailInput).toBeInTheDocument();
     expect(passwordInput).toBeInTheDocument();
