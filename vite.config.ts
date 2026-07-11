@@ -26,7 +26,7 @@ export default defineConfig({
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.stories.{ts,tsx}', 'src/test/**', 'src/main.tsx', 'src/assets/**'],
-      reporter: ['text', 'html'],
+      reporter: ['text', 'html', 'lcov'],
     },
     projects: [{
       extends: true,
