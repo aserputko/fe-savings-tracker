@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form';
 
+import { ResponseError } from '@/api/generated';
 import { Button } from '@/shared/components/ui/button';
 import { Dialog } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
@@ -40,6 +41,7 @@ function CreateSavingsGoalSubmitButton({ isPending }: SubmitButtonProps) {
 
 export function CreateSavingsGoalDialog({ open, onOpenChange }: CreateSavingsGoalDialogProps) {
   const { mutate, isPending } = useCreateSavingsGoal();
+  const [genericError, setGenericError] = useState<string | null>(null);
 
   const methods = useForm<CreateSavingsGoalFormValues, unknown, CreateSavingsGoalFormOutput>({
     resolver: zodResolver(CreateSavingsGoalSchema),
@@ -47,15 +49,18 @@ export function CreateSavingsGoalDialog({ open, onOpenChange }: CreateSavingsGoa
     mode: 'onSubmit',
   });
 
-  const { control, handleSubmit, reset } = methods;
+  const { control, handleSubmit, reset, setError } = methods;
 
   useEffect(() => {
     if (!open) {
       reset(createSavingsGoalDefaults);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setGenericError(null);
     }
   }, [open, reset]);
 
   function onSubmit(values: CreateSavingsGoalFormOutput) {
+    setGenericError(null);
     mutate(
       {
         name: values.name,
@@ -65,6 +70,16 @@ export function CreateSavingsGoalDialog({ open, onOpenChange }: CreateSavingsGoa
       {
         onSuccess: () => {
           onOpenChange(false);
+        },
+        onError: (error) => {
+          if (error instanceof ResponseError && error.response.status === 409) {
+            setError('name', {
+              type: 'server',
+              message: 'A goal with this name already exists',
+            });
+            return;
+          }
+          setGenericError('Something went wrong. Please try again.');
         },
       },
     );
@@ -77,12 +92,23 @@ export function CreateSavingsGoalDialog({ open, onOpenChange }: CreateSavingsGoa
         onOpenChange={onOpenChange}
         title='New goal'
         footer={
-          <>
-            <Button variant='secondary' type='button' onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <CreateSavingsGoalSubmitButton isPending={isPending} />
-          </>
+          <div className='flex w-full flex-col gap-3'>
+            {genericError && (
+              <p
+                role='alert'
+                data-testid='create-savings-goal-error'
+                className='text-preset-4 text-red-500 text-right'
+              >
+                {genericError}
+              </p>
+            )}
+            <div className='flex items-center justify-end gap-4'>
+              <Button variant='secondary' type='button' onClick={() => onOpenChange(false)}>
+                Cancel
+              </Button>
+              <CreateSavingsGoalSubmitButton isPending={isPending} />
+            </div>
+          </div>
         }
       >
         <form id={FORM_ID} onSubmit={handleSubmit(onSubmit)} noValidate>
