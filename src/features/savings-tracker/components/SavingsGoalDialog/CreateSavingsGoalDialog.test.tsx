@@ -23,10 +23,7 @@ function renderDialog() {
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>
   );
-  const result = render(
-    <CreateSavingsGoalDialog open onOpenChange={onOpenChange} />,
-    { wrapper },
-  );
+  const result = render(<CreateSavingsGoalDialog open onOpenChange={onOpenChange} />, { wrapper });
   return { ...result, onOpenChange };
 }
 
@@ -66,13 +63,9 @@ describe('CreateSavingsGoalDialog — KAN-49 duplicate handling', () => {
     await userEvent.click(screen.getByRole('button', { name: /Create goal/i }));
 
     expect(mutate).toHaveBeenCalledTimes(1);
-    expect(
-      await screen.findByText('A goal with this name already exists'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('A goal with this name already exists')).toBeInTheDocument();
     expect(onOpenChange).not.toHaveBeenCalled();
-    expect(
-      screen.queryByText('Something went wrong. Please try again.'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Something went wrong. Please try again.')).not.toBeInTheDocument();
   });
 
   it('GIVEN API returns a non-409 error WHEN submitting THEN generic error is shown above buttons and dialog stays open', async () => {
@@ -87,12 +80,10 @@ describe('CreateSavingsGoalDialog — KAN-49 duplicate handling', () => {
     await userEvent.click(screen.getByRole('button', { name: /Create goal/i }));
 
     expect(mutate).toHaveBeenCalledTimes(1);
-    expect(
-      await screen.findByTestId('create-savings-goal-error'),
-    ).toHaveTextContent('Something went wrong. Please try again.');
-    expect(
-      screen.queryByText('A goal with this name already exists'),
-    ).not.toBeInTheDocument();
+    expect(await screen.findByTestId('create-savings-goal-error')).toHaveTextContent(
+      'Something went wrong. Please try again.',
+    );
+    expect(screen.queryByText('A goal with this name already exists')).not.toBeInTheDocument();
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
@@ -107,11 +98,7 @@ describe('CreateSavingsGoalDialog — KAN-49 duplicate handling', () => {
     await userEvent.click(screen.getByRole('button', { name: /Create goal/i }));
 
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false));
-    expect(
-      screen.queryByText('A goal with this name already exists'),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByTestId('create-savings-goal-error'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('A goal with this name already exists')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('create-savings-goal-error')).not.toBeInTheDocument();
   });
 });

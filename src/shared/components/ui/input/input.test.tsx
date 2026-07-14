@@ -78,4 +78,16 @@ describe('Input', () => {
     await userEvent.type(screen.getByRole('textbox'), 'hi');
     expect(onChange).toHaveBeenCalled();
   });
+
+  it('GIVEN rightIcon prop WHEN rendered THEN icon image is shown', () => {
+    render(<Input rightIcon='calendar' />);
+    expect(screen.getByRole('img', { name: 'calendar' })).toBeInTheDocument();
+  });
+
+  it('GIVEN rightIcon with onRightIconClick WHEN icon is clicked THEN handler is called', async () => {
+    const onRightIconClick = vi.fn();
+    render(<Input rightIcon='calendar' onRightIconClick={onRightIconClick} />);
+    await userEvent.click(screen.getByRole('button', { name: 'calendar' }));
+    expect(onRightIconClick).toHaveBeenCalledTimes(1);
+  });
 });

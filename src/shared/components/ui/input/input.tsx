@@ -29,11 +29,27 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement>, VariantProps<typeof inputWrapperVariants> {
   label?: string;
   leftIcon?: IconName;
+  rightIcon?: IconName;
+  onRightIconClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   errorText?: string;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, variant, label, leftIcon, errorText, disabled, required, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      label,
+      leftIcon,
+      rightIcon,
+      onRightIconClick,
+      errorText,
+      disabled,
+      required,
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <div className={cn('flex flex-col gap-2.5', disabled && 'opacity-50 pointer-events-none')}>
         {label !== undefined && (
@@ -55,6 +71,21 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
             {...props}
           />
+          {rightIcon &&
+            (onRightIconClick ? (
+              <button
+                type='button'
+                onClick={onRightIconClick}
+                disabled={disabled}
+                tabIndex={-1}
+                aria-label={rightIcon}
+                className='flex items-center justify-center focus-visible:outline-none'
+              >
+                <Icon name={rightIcon} />
+              </button>
+            ) : (
+              <Icon name={rightIcon} />
+            ))}
         </div>
         {errorText && (
           <div className='flex items-center gap-2'>
