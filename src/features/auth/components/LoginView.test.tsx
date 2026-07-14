@@ -219,4 +219,31 @@ describe('LoginView', () => {
     const form = container.querySelector('form');
     expect(form).toHaveAttribute('novalidate');
   });
+
+  // KAN-50 — Session expired banner
+  describe('KAN-50 — session expired banner', () => {
+    function renderLoginViewWithState(state: unknown) {
+      return render(
+        <MemoryRouter initialEntries={[{ pathname: '/login', state }]}>
+          <LoginView />
+        </MemoryRouter>,
+      );
+    }
+
+    it('GIVEN location.state.sessionExpired is true WHEN rendered THEN session-expired banner is visible', () => {
+      setupUseLogin();
+      renderLoginViewWithState({ sessionExpired: true });
+
+      expect(screen.getByTestId('session-expired-banner')).toHaveTextContent(
+        'Your session has expired. Please sign in again.',
+      );
+    });
+
+    it('GIVEN no location.state WHEN rendered THEN session-expired banner is NOT visible', () => {
+      setupUseLogin();
+      renderLoginView();
+
+      expect(screen.queryByTestId('session-expired-banner')).not.toBeInTheDocument();
+    });
+  });
 });
