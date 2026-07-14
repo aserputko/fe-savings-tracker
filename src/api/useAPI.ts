@@ -1,11 +1,14 @@
 import { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { getToken } from '../features/auth/lib/token';
+import { getToken, removeToken } from '../features/auth/lib/token';
 import * as api from './generated';
 
 export type FetchAPI = WindowOrWorkerGlobalScope['fetch'];
 
 export function useFetchApi() {
+  const navigate = useNavigate();
+
   return useCallback<FetchAPI>(
     async (url, init) => {
       const headers: HeadersInit = {};
@@ -22,25 +25,31 @@ export function useFetchApi() {
         headers: {
           ...init?.headers,
           ...headers,
-        }
+        },
       });
+
+      // KAN-50: If the request was authenticated (we sent a token) and the API
+      // rejected it with 401, the token is invalid/expired. Clear it and
+      // redirect the user to /login so they can re-authenticate.
+      if (response.status === 401 && token) {
+        removeToken();
+        navigate('/login', { replace: true, state: { sessionExpired: true } });
+      }
 
       return response;
     },
-    []
+    [navigate],
   );
 }
-
-
 
 function useConfig() {
   const fetchApi = useFetchApi();
   const baseConfig = useMemo(
     () => ({
       basePath: 'http://localhost:4000',
-      fetchApi
+      fetchApi,
     }),
-    [fetchApi]
+    [fetchApi],
   );
 
   return useMemo(() => new api.Configuration(baseConfig), [baseConfig]);

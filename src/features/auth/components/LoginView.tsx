@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
@@ -18,6 +18,9 @@ import {
 
 export function LoginView() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const sessionExpired =
+    (location.state as { sessionExpired?: boolean } | null)?.sessionExpired === true;
   const { mutate: login, isPending, error } = useLogin();
 
   const methods = useForm<LoginFormValues, unknown, LoginFormOutput>({
@@ -50,6 +53,16 @@ export function LoginView() {
           <p className='text-preset-5 text-neutral-300'>Sign in to your account</p>
 
           <hr className='my-8 border-neutral-700' />
+
+          {sessionExpired && (
+            <p
+              role='alert'
+              data-testid='session-expired-banner'
+              className='text-preset-5 text-orange-400 mb-5'
+            >
+              Your session has expired. Please sign in again.
+            </p>
+          )}
 
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} noValidate className='flex flex-col gap-5'>
