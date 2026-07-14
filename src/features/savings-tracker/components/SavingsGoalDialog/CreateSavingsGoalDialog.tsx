@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { format, parse } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import { ResponseError } from '@/api/generated';
 import { Button } from '@/shared/components/ui/button';
+import { DatePicker } from '@/shared/components/ui/date-picker';
 import { Dialog } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
 
@@ -149,11 +151,15 @@ export function CreateSavingsGoalDialog({ open, onOpenChange }: CreateSavingsGoa
               name='deadline'
               control={control}
               render={({ field, fieldState }) => (
-                <Input
-                  {...field}
+                <DatePicker
+                  ref={field.ref}
+                  name={field.name}
+                  onBlur={field.onBlur}
+                  value={field.value ? parse(field.value, 'yyyy-MM-dd', new Date()) : undefined}
+                  onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
                   label='Deadline'
-                  type='date'
-                  leftIcon='calendar'
+                  placeholder='Select a date'
+                  disabledDates={{ before: new Date() }}
                   variant={fieldState.invalid ? 'error' : 'default'}
                   errorText={fieldState.error?.message}
                 />
