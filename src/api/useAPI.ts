@@ -25,7 +25,7 @@ export function useFetchApi() {
         headers: {
           ...init?.headers,
           ...headers,
-        }
+        },
       });
 
       // KAN-50: If the request was authenticated (we sent a token) and the API
@@ -38,20 +38,18 @@ export function useFetchApi() {
 
       return response;
     },
-    [navigate]
+    [navigate],
   );
 }
-
-
 
 function useConfig() {
   const fetchApi = useFetchApi();
   const baseConfig = useMemo(
     () => ({
       basePath: 'http://localhost:4000',
-      fetchApi
+      fetchApi,
     }),
-    [fetchApi]
+    [fetchApi],
   );
 
   return useMemo(() => new api.Configuration(baseConfig), [baseConfig]);
