@@ -1,0 +1,11 @@
+# Per-environment values are provided via dev.tfvars / staging.tfvars /
+# production.tfvars (see those files). Copy this file to terraform.tfvars ONLY if
+# you need to override the shared defaults below for a local run. terraform.tfvars
+# is gitignored.
+
+# environment            = "dev"                    # dev | staging | production (normally set via <env>.tfvars)
+project_name           = "savings-tracker-webapp"
+aws_region             = "us-east-1"
+root_domain            = "aserputko.com"
+acm_certificate_domain = "*.aserputko.com"
+github_repository      = "aserputko/fe-savings-tracker"

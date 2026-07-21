@@ -1,0 +1,89 @@
+name: Deploy Web App
+
+on:
+  # Auto-deploy to DEV on every merge/push to main (no inputs → environment 'dev').
+  push:
+    branches: [main]
+  # Manual deploy to any environment (dropdown defaults to dev).
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment to build and deploy
+        type: choice
+        required: true
+        default: dev
+        options:
+          - dev
+          - staging
+          - production
+
+permissions:
+  id-token: write # required for OIDC role assumption
+  contents: read
+
+concurrency:
+  # push carries no inputs, so it falls back to dev — the same group a manual
+  # dev run uses, so the two can't deploy dev concurrently.
+  group: deploy-webapp-${{ inputs.environment || 'dev' }}
+  cancel-in-progress: true
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  deploy:
+    name: Build & Deploy Web App (${{ inputs.environment || 'dev' }})
+    runs-on: ubuntu-latest
+
+    # Binds the run to the GitHub Environment of the same name (push defaults to
+    # dev). This is what makes `vars.*` resolve to the environment-scoped values
+    # below (isolated per env, never Storybook's repo-level ones) and sets the
+    # OIDC subject the IAM role trusts: repo:<owner>/<repo>:environment:<env>.
+    environment: ${{ inputs.environment || 'dev' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Validate deploy configuration
+        env:
+          AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+          S3_BUCKET: ${{ vars.S3_BUCKET }}
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+        run: |
+          : "${AWS_ROLE_ARN:?Set AWS_ROLE_ARN as a variable on the '${{ inputs.environment || 'dev' }}' GitHub Environment}"
+          : "${S3_BUCKET:?Set S3_BUCKET as a variable on the '${{ inputs.environment || 'dev' }}' GitHub Environment}"
+          : "${CLOUDFRONT_DISTRIBUTION_ID:?Set CLOUDFRONT_DISTRIBUTION_ID as a variable on the '${{ inputs.environment || 'dev' }}' GitHub Environment}"
+          : "${VITE_API_URL:?Set VITE_API_URL as a variable on the '${{ inputs.environment || 'dev' }}' GitHub Environment}"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web app
+        run: npm run build
+        env:
+          # Baked into the bundle at build time (Vite reads VITE_* at build).
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sync build to S3
+        run: aws s3 sync dist/ "s3://${{ vars.S3_BUCKET }}" --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/*"

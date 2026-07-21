@@ -46,7 +46,9 @@ function useConfig() {
   const fetchApi = useFetchApi();
   const baseConfig = useMemo(
     () => ({
-      basePath: 'http://localhost:4000',
+      // Set per environment at build time (VITE_API_URL). Falls back to the
+      // local API for `npm run dev` and tests where the var is unset.
+      basePath: import.meta.env.VITE_API_URL ?? 'http://localhost:4000',
       fetchApi,
     }),
     [fetchApi],

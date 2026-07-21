@@ -3,6 +3,9 @@
 Storybook is deployed as a static site to AWS and served at
 **https://saving-tracker-storybook.aserputko.com**.
 
+> Deploying the **web app** (DEV / STAGING / PRODUCTION) is a separate stack —
+> see [README-webapp.md](README-webapp.md).
+
 ```mermaid
 flowchart LR
     A[Push to main] --> B[GitHub Actions\ndeploy-storybook.yml]
@@ -22,7 +25,7 @@ flowchart LR
 | CloudFront alias              | `saving-tracker-storybook.aserputko.com`                            |
 | TLS certificate               | existing ACM cert for `*.aserputko.com` (looked up, never modified) |
 | GitHub auth                   | OIDC — no AWS keys stored in GitHub                                 |
-| Terraform state               | local file in `devops/terraform/` (gitignored)                      |
+| Terraform state               | local file in `devops/terraform-storybook/` (gitignored)            |
 
 ---
 
@@ -52,19 +55,19 @@ flowchart LR
 
 ## 2. Provision the infrastructure with Terraform
 
-All commands run from this folder's `terraform/` subdirectory:
+All commands run from this folder's `terraform-storybook/` subdirectory:
 
 ```bash
-cd fe-savings-tracker/devops/terraform
+cd fe-savings-tracker/devops/terraform-storybook
 
 terraform init      # downloads the AWS provider
 terraform plan      # review: S3 bucket, CloudFront, OIDC provider, IAM role
 terraform apply     # type "yes" to confirm
 ```
 
-All variables have sensible defaults ([variables.tf](terraform/variables.tf)).
+All variables have sensible defaults ([variables.tf](./variables.tf)).
 To override any of them, copy
-[terraform.tfvars.example](terraform/terraform.tfvars.example) to
+[terraform.tfvars.example](./terraform.tfvars.example) to
 `terraform.tfvars` and edit it (the file is gitignored).
 
 ### If apply fails with `EntityAlreadyExists` for the OIDC provider
@@ -189,13 +192,13 @@ Then delete the GoDaddy CNAME record and the three GitHub variables.
 
 ## Troubleshooting
 
-| Symptom                                                                   | Cause / fix                                                                                          |
-| ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `terraform plan` fails: no matching ACM certificate                       | Cert missing or not `ISSUED` in `us-east-1`. See step 1.4.                                           |
-| `apply` fails: `EntityAlreadyExists` on OIDC provider                     | Provider already exists in the account — import it (step 2).                                         |
+| Symptom                                                                                                  | Cause / fix                                                                                                                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `terraform plan` fails: no matching ACM certificate                                                      | Cert missing or not `ISSUED` in `us-east-1`. See step 1.4.                                                                                                                                                                                                                                                                                                                                                   |
+| `apply` fails: `EntityAlreadyExists` on OIDC provider                                                    | Provider already exists in the account — import it (step 2).                                                                                                                                                                                                                                                                                                                                                 |
 | `apply` fails: `AccessDenied: Your account must be verified before you can add new CloudFront resources` | Account-level AWS restriction on new accounts. Open a free support case: [AWS Support Center](https://console.aws.amazon.com/support/home#/) → **Create case → Account and billing → Account → Activation**, paste the error message and ask for CloudFront verification of account `041121416087`. Once resolved (usually within ~24h), re-run `terraform apply` — already-created resources are untouched. |
-| Workflow fails: `Not authorized to perform sts:AssumeRoleWithWebIdentity` | Run is not on `main` of `aserputko/fe-savings-tracker`, or `AWS_ROLE_ARN` variable is wrong/missing. |
-| Workflow fails: `Credentials could not be loaded`                         | `permissions: id-token: write` removed from the workflow, or role trust policy changed.              |
-| Site shows old content after deploy                                       | Invalidation still propagating (~1–5 min); hard-refresh the browser.                                 |
-| `403` / certificate error in browser                                      | CloudFront still deploying (~10 min after apply), or GoDaddy CNAME missing/typo'd.                   |
-| Custom domain works but `dxxxx.cloudfront.net` shows cert warning         | Expected — the wildcard cert only covers `*.aserputko.com`.                                          |
+| Workflow fails: `Not authorized to perform sts:AssumeRoleWithWebIdentity`                                | Run is not on `main` of `aserputko/fe-savings-tracker`, or `AWS_ROLE_ARN` variable is wrong/missing.                                                                                                                                                                                                                                                                                                         |
+| Workflow fails: `Credentials could not be loaded`                                                        | `permissions: id-token: write` removed from the workflow, or role trust policy changed.                                                                                                                                                                                                                                                                                                                      |
+| Site shows old content after deploy                                                                      | Invalidation still propagating (~1–5 min); hard-refresh the browser.                                                                                                                                                                                                                                                                                                                                         |
+| `403` / certificate error in browser                                                                     | CloudFront still deploying (~10 min after apply), or GoDaddy CNAME missing/typo'd.                                                                                                                                                                                                                                                                                                                           |
+| Custom domain works but `dxxxx.cloudfront.net` shows cert warning                                        | Expected — the wildcard cert only covers `*.aserputko.com`.                                                                                                                                                                                                                                                                                                                                                  |
