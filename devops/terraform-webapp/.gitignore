@@ -1,0 +1,22 @@
+# Local state (this project intentionally uses local state — do not commit it).
+# With workspaces, per-env state lives under terraform.tfstate.d/<workspace>/.
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+terraform.tfstate.d/
+
+# Variable files may contain account-specific values. The per-environment files
+# below carry only non-sensitive infra config, so they ARE tracked on purpose.
+*.tfvars
+!*.tfvars.example
+!dev.tfvars
+!staging.tfvars
+!production.tfvars
+
+# Provider plugins and modules
+.terraform/
+
+# Crash logs and plan files
+crash.log
+crash.*.log
+*.tfplan
